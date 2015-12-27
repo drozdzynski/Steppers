@@ -11,6 +11,8 @@ android:
     - extra-google-m2repository
 
 install: false
+script:
+  - ./gradlew build
 
 os:
   - linux
