@@ -3,7 +3,12 @@ sudo: false
 
 android:
   components:
+    - platform-tool
+    - tool
     - build-tools-23.0.1
+    - android-23
+    - extra-android-m2repository
+    - extra-google-m2repository
 
 os:
   - linux
