@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LabelActive">
+        <item name="android:textSize">14sp</item>
+        <!--<item name="android:textStyle">@integer/font_textStyle_medium</item>-->
+    </style>
+
+    <style name="LabelInactive">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#BDBDBD</item>
+    </style>
+
+
+    <style name="SubLabelActive">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#9C9C9C</item>
+    </style>
+
+    <style name="SubLabelInactive">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#BDBDBD</item>
+    </style>
+</resources>
