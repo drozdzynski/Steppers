@@ -10,6 +10,7 @@ import android.widget.TextView;
 public class SteppersViewHolder extends RecyclerView.ViewHolder {
 
     private boolean isExpanded;
+    private boolean isChecked;
 
     protected View itemView;
     protected RoundedView roundedView;
@@ -43,5 +44,16 @@ public class SteppersViewHolder extends RecyclerView.ViewHolder {
 
     public void setExpanded(boolean expanded) {
         isExpanded = expanded;
+    }
+
+    /**
+     * @return true if step is done, false if not
+     */
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 }

@@ -1,21 +1,16 @@
 package me.drozdzynski.library.steppers;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,10 +62,17 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
     @Override
     public void onBindViewHolder(final SteppersViewHolder holder, final int position) {
         holder.setExpanded(position == currentStep);
+        holder.setChecked(position < currentStep);
         final SteppersItem steppersItem = items.get(position);
 
-        holder.roundedView.setText(position + 1 + "");
-        if(holder.isExpanded()) holder.roundedView.setCircleAccentColor();
+        if(holder.isChecked()) {
+            holder.roundedView.setChecked(true);
+        } else {
+            holder.roundedView.setChecked(false);
+            holder.roundedView.setText(position + 1 + "");
+        }
+
+        if(holder.isExpanded() || holder.isChecked()) holder.roundedView.setCircleAccentColor();
         else holder.roundedView.setCircleGrayColor();
 
         holder.textViewLabel.setText(steppersItem.getLabel());
@@ -109,16 +111,17 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
 
         if(config.getFragmentManager() != null && steppersItem.getFragment() != null && holder.isExpanded()) {
             holder.frameLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+
             if(fragmentManager.getFragments() != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 List<Fragment> fragments = fragmentManager.getFragments();
-                for(int i = 0; i < fragments.size(); i++) {
-                    Log.d("SteppersAdapter", fragments.get(i).toString() + ", " + fragments.get(i).isVisible() + " : " + i);
-                    if(i < fragments.size() - 1)
-                        fragmentTransaction.remove(fragments.get(i));
+                for(Fragment fragment : fragments) {
+                    if(fragments.size() > 1)
+                        fragmentTransaction.detach(fragment);
                 }
                 fragmentTransaction.commit();
             }
+
             fragmentManager.beginTransaction()
                     .replace(frameLayoutIds.get(position), steppersItem.getFragment()).commit();
         }
@@ -159,5 +162,4 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
         while( view.getRootView().findViewById(++fID) != null );
         return fID;
     }
-
 }

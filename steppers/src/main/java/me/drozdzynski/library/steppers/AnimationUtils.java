@@ -1,19 +1,13 @@
 package me.drozdzynski.library.steppers;
 
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.Transformation;
-import android.widget.LinearLayout;
 
 public class AnimationUtils {
 

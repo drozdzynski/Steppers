@@ -3,18 +3,13 @@ package me.drozdzynski.library.steppers;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SteppersView extends LinearLayout {
@@ -65,6 +60,7 @@ public class SteppersView extends LinearLayout {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
             steppersAdapter = new SteppersAdapter(getContext(), config, items);
+            steppersAdapter.setPossitiveButtonEnable(possitiveButtonEnable);
 
             recyclerView.setAdapter(steppersAdapter);
         } else {
@@ -72,9 +68,13 @@ public class SteppersView extends LinearLayout {
         }
     }
 
+    private boolean possitiveButtonEnable = true;
+
     public void setPossitiveButtonEnable(boolean enable){
+        possitiveButtonEnable = enable;
+
         if(steppersAdapter != null)
-            steppersAdapter.setPossitiveButtonEnable(enable);
+            steppersAdapter.setPossitiveButtonEnable(possitiveButtonEnable);
     }
 
     public static class Config {
