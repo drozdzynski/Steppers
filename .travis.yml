@@ -16,3 +16,9 @@ script:
 
 os:
   - linux
+
+notifications:
+  slack:
+    rooms:
+      - drozdzynski:uw5MXDDxTUauUjxuXPhPQW5V#general
+      - drozdzynski:uw5MXDDxTUauUjxuXPhPQW5V#steppers
