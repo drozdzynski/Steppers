@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2015 Krystian Drożdżyński
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package me.drozdzynski.library.steppers;
 
 import android.content.Context;
@@ -56,24 +72,25 @@ public class RoundedView extends View {
     }
 
     public void setCircleGrayColor(){
-        color = Color.parseColor("#BDBDBD");
+        color = ContextCompat.getColor(getContext(), R.color.circle_color_default_gray);
         invalidate();
     }
 
     public void setText(String text) {
         this.text = text;
+        this.checked = false;
         invalidate();
     }
 
     public void setChecked(boolean checked){
         this.checked = checked;
+        text = null;
         invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         if (getBackgroundColor(this) != 0) color = getBackgroundColor(this);
-        //setBackgroundColor(ContextCompat.getColor(getContext(), R.color.transparent));
 
         Paint paint = new Paint(0);
 
@@ -88,7 +105,7 @@ public class RoundedView extends View {
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
 
         if(text != null && !checked) drawText(canvas);
-        if(checked) drawChecked(canvas);
+        if(checked && text == null) drawChecked(canvas);
     }
 
     private int getBackgroundColor(View view) {
