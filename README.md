@@ -1,6 +1,79 @@
 ![alt tag](https://api.travis-ci.org/drozdzynski/Steppers.svg)
 # Steppers
 
+##Setup
+
+###1. Add library to project
+#### Manual
+* Download the library folder.
+* Copy to root project folder
+* Add to your settings.gradle file the following code line: "include ':app', ':steppers'"
+* Rebuild the project
+* Add dependency
+    * File → Project Structure 
+    * in Modules section click on "app"
+    * Click on tab "Dependecies"
+    * Click on the green plus
+    * Module Dependecy
+    * Select ":library"
+* Done
+
+###2. Add view in XML Layout
+```
+<me.drozdzynski.library.steppers.SteppersView
+    android:id="@+id/steppersView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+```
+
+###3. Setup config for SteppersView
+```
+SteppersView.Config steppersViewConfig = new SteppersView.Config();
+steppersViewConfig.setOnFinishAction(new OnFinishAction() {
+    @Override
+    public void onFinish() {
+        // Action on last step Finish button
+    }
+});
+
+steppersViewConfig.setOnCancelAction(new OnCancelAction() {
+    @Override
+    public void onCancel() {
+        // Action when click cancel on one of steps
+    }
+});
+
+// Setup Support Fragment Manager for fragments in steps
+steppersViewConfig.setFragmentManager(getSupportFragmentManager());
+```
+
+###4. Create steps list
+```
+ArrayList<SteppersItem> steps = new ArrayList<>();
+
+SteppersItem stepFirst = new SteppersItem();
+
+stepFirst.setLabel("Title of step");
+stepFirst.setSubLabel("Subtitle of step");
+stepFirst.setFragment(new SomeFragment());
+
+steps.add(stepFirst);
+```
+
+###5. Set config, list and build view;
+```
+SteppersView steppersView = (SteppersView) findViewById(R.id.steppersView);
+steppersView.setConfig(steppersViewConfig);
+steppersView.setItems(steps);
+steppersView.build();
+```
+
+## Funtions
+
+#### Set continue or finish button enabled/disabled
+```
+steppersView.setPossitiveButtonEnable(false);
+```
 
 ## License
 ```
