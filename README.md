@@ -4,6 +4,21 @@
 ##Setup
 
 ###1. Add library to project
+
+#### Grab via Gradle:
+```
+repositories {
+    mavenCentral()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+}
+
+dependencies {
+    compile 'me.drozdzynski.library.steppers:steppers:0.1-SNAPSHOT@jar'
+}
+```
+
 #### Manual
 * Download the library folder.
 * Copy to root project folder
