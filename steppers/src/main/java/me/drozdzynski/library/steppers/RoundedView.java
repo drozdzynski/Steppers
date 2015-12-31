@@ -16,14 +16,13 @@
 
 package me.drozdzynski.library.steppers;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
@@ -37,16 +36,21 @@ import java.lang.reflect.Field;
 
 public class RoundedView extends View {
 
-    protected RoundedView(Context context) {
+    public RoundedView(Context context) {
         super(context);
     }
 
-    protected RoundedView(Context context, AttributeSet attrs) {
+    public RoundedView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    protected RoundedView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public RoundedView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public RoundedView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override
@@ -54,7 +58,26 @@ public class RoundedView extends View {
 
     }
 
-    private int color = Color.parseColor("#BDBDBD");
+    Paint paint = new Paint(Paint.DITHER_FLAG);
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        //if (getBackgroundColor(this) != 0) color = getBackgroundColor(this);
+
+        paint.setAntiAlias(true);
+        paint.setFilterBitmap(true);
+        paint.setDither(true);
+        canvas.drawARGB(0, 0, 0, 0);
+
+        paint.setColor(color);
+        canvas.drawCircle(getWidth() / 2, getHeight() / 2,
+                getWidth() / 2, paint);
+
+        if(text != null && !checked) drawText(canvas);
+        if(checked && text == null) drawChecked(canvas);
+    }
+
+    private int color = ContextCompat.getColor(getContext(), R.color.circle_color_default_gray);
     private String text = null;
     private boolean checked = false;
 
@@ -86,26 +109,6 @@ public class RoundedView extends View {
         this.checked = checked;
         text = null;
         invalidate();
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        if (getBackgroundColor(this) != 0) color = getBackgroundColor(this);
-
-        Paint paint = new Paint(0);
-
-        paint.setAntiAlias(true);
-        paint.setFilterBitmap(true);
-        paint.setDither(true);
-        canvas.drawARGB(0, 0, 0, 0);
-
-        paint.setColor(color);
-        canvas.drawCircle(getWidth() / 2, getHeight() / 2,
-                getWidth() / 2, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-
-        if(text != null && !checked) drawText(canvas);
-        if(checked && text == null) drawChecked(canvas);
     }
 
     private int getBackgroundColor(View view) {

@@ -24,6 +24,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import java.util.List;
@@ -68,10 +69,16 @@ public class SteppersView extends LinearLayout {
         if(config != null) {
             setOrientation(LinearLayout.HORIZONTAL);
 
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            inflater.inflate(R.layout.steppers_recycle, this, true);
+            //LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            //inflater.inflate(R.layout.steppers_recycle, this, true);
+            //recyclerView = (RecyclerView) getChildAt(0);
 
-            recyclerView = (RecyclerView) getChildAt(0);
+            recyclerView = new RecyclerView(getContext());
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            recyclerView.setLayoutParams(layoutParams);
+
+            addView(recyclerView);
+
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

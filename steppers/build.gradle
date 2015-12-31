@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply from: '../gradle/maven_push.gradle'
 
 android {
     compileSdkVersion 23
@@ -7,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 2
-        versionName "0.2-SNAPSHOT"
+        versionCode 3
+        versionName "0.2.1-SNAPSHOT"
     }
 }
 
@@ -18,23 +19,3 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
 }
-
-// build a jar with source files
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-artifacts {
-    archives sourcesJar
-}
-
-// Build a jar file in addition to the default aar file
-android.libraryVariants.all { variant ->
-    def name = variant.buildType.name
-    def task = project.tasks.create "jar${name.capitalize()}", Jar
-    task.dependsOn variant.javaCompile
-    task.from variant.javaCompile.destinationDir
-    artifacts.add('archives', task);
-}
-
-apply from: '../gradle/maven_push.gradle'
