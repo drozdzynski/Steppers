@@ -10,11 +10,6 @@ android {
         versionCode 1
         versionName "0.1-SNAPSHOT"
     }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
 }
 
 dependencies {
