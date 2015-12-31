@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    compile 'me.drozdzynski.library.steppers:steppers:0.1-SNAPSHOT@jar'
+    compile 'me.drozdzynski.library.steppers:steppers:0.2-SNAPSHOT@jar'
 }
 ```
 
@@ -25,7 +25,7 @@ dependencies {
 * Add to your settings.gradle file the following code line: "include ':app', ':steppers'"
 * Rebuild the project
 * Add dependency
-    * File → Project Structure 
+    * File → Project Structure
     * in Modules section click on "app"
     * Click on tab "Dependecies"
     * Click on the green plus
