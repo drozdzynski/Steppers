@@ -1,4 +1,7 @@
 ![alt tag](https://api.travis-ci.org/drozdzynski/Steppers.svg)
+<a href="http://slack.drozdzynski.me" rel="some text">![alt text][slackin]</a>
+[slackin]: http://slack.drozdzynski.me/badge.svg "Slack Drożdżyński"
+
 # Steppers
 
 ##Setup
