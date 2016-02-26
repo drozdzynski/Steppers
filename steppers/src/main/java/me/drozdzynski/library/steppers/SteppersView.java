@@ -24,7 +24,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import java.util.List;
@@ -86,6 +88,7 @@ public class SteppersView extends LinearLayout {
             steppersAdapter.setPossitiveButtonEnable(possitiveButtonEnable);
 
             recyclerView.setAdapter(steppersAdapter);
+
         } else {
             throw new RuntimeException("SteppersView need config, read documentation to get more info");
         }
@@ -135,6 +138,12 @@ public class SteppersView extends LinearLayout {
         public FragmentManager getFragmentManager() {
             return fragmentManager;
         }
+    }
+
+    static int fID = 190980;
+    protected static int findUnusedId(View view) {
+        while( view.getRootView().findViewById(++fID) != null );
+        return fID;
     }
 
 }

@@ -16,6 +16,9 @@
 
 package me.drozdzynski.library.steppers;
 
+import android.content.Context;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -27,7 +30,7 @@ import android.view.animation.Transformation;
 
 public class AnimationUtils {
 
-    protected static void hide(View view){
+    protected static void hide(final View view){
         Animation fadeOut = new AlphaAnimation(1, 0);
         fadeOut.setDuration(500);
 
@@ -39,6 +42,23 @@ public class AnimationUtils {
         animation.setInterpolator(new AccelerateInterpolator());
         animation.addAnimation(fadeOut);
         animation.addAnimation(collapse);
+
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                view.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
 
         view.startAnimation(animation);
     }
@@ -56,27 +76,43 @@ public class AnimationUtils {
         animation.addAnimation(collapse);
         animation.addAnimation(fadeIn);
 
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                view.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
         view.startAnimation(animation);
     }
 
     protected static class ExpandCollapse extends Animation {
         private View mView;
-        private float mToHeight;
-        private float mFromHeight;
+        private final int mStartHeight;
+        private final int mDeltaHeight;
 
-        public ExpandCollapse(View v, float fromHeight, float toHeight) {
-            mToHeight = toHeight;
-            mFromHeight = fromHeight;
-            mView = v;
-            setDuration(300);
+        public ExpandCollapse(View view, int startHeight, int endHeight) {
+            mView = view;
+            mStartHeight = startHeight;
+            mDeltaHeight = endHeight - startHeight;
+            Log.d("Expand", startHeight + ", " + endHeight + " : " + mDeltaHeight);
         }
+
         @Override
         protected void applyTransformation(float interpolatedTime, Transformation t) {
-            float height =
-                    (mToHeight - mFromHeight) * interpolatedTime + mFromHeight;
-            ViewGroup.LayoutParams p = mView.getLayoutParams();
-            p.height = (int) height;
-            mView.requestLayout();
+            android.view.ViewGroup.LayoutParams lp = mView.getLayoutParams();
+            lp.height = (int) (mStartHeight + mDeltaHeight * interpolatedTime);
+            mView.setLayoutParams(lp);
         }
 
         @Override

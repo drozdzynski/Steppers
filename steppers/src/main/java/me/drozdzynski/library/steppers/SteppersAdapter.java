@@ -17,11 +17,13 @@
 package me.drozdzynski.library.steppers;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,10 +35,12 @@ import java.util.Map;
 
 public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
 
+    private static final String TAG = "SteppersAdapter";
     private Context context;
     private SteppersView.Config config;
     private List<SteppersItem> items;
     private FragmentManager fragmentManager;
+    private FragmentTransaction fragmentTransaction;
 
     private Map<Integer, Integer> frameLayoutIds = new HashMap<>();
 
@@ -77,10 +81,9 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
 
     @Override
     public void onBindViewHolder(final SteppersViewHolder holder, final int position) {
-        holder.setExpanded(position == currentStep);
-        holder.setChecked(position < currentStep);
         final SteppersItem steppersItem = items.get(position);
 
+        holder.setChecked(position < currentStep);
         if(holder.isChecked()) {
             holder.roundedView.setChecked(true);
         } else {
@@ -88,14 +91,13 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
             holder.roundedView.setText(position + 1 + "");
         }
 
-        if(holder.isExpanded() || holder.isChecked()) holder.roundedView.setCircleAccentColor();
+        if(position == currentStep || holder.isChecked()) holder.roundedView.setCircleAccentColor();
         else holder.roundedView.setCircleGrayColor();
 
         holder.textViewLabel.setText(steppersItem.getLabel());
         holder.textViewSubLabel.setText(steppersItem.getSubLabel());
 
-        if (position != currentStep && position != beforeStep)
-            holder.linearLayoutContent.setVisibility(holder.isExpanded() || position == beforeStep ? View.VISIBLE : View.GONE);
+        holder.linearLayoutContent.setVisibility(position == currentStep || position == beforeStep ? View.VISIBLE : View.GONE);
 
         holder.buttonContinue.setEnabled(possitiveButtonEnable);
 
@@ -125,37 +127,56 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
 
         frameLayout.setId(frameLayoutIds.get(position));
 
-        if(config.getFragmentManager() != null && steppersItem.getFragment() != null && holder.isExpanded()) {
+        if(config.getFragmentManager() != null && steppersItem.getFragment() != null &&
+                ( position == beforeStep || position == currentStep )
+                ) {
             holder.frameLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
 
-            if(fragmentManager.getFragments() != null) {
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                List<Fragment> fragments = fragmentManager.getFragments();
-                for(Fragment fragment : fragments) {
-                    if(fragments.size() > 1)
-                        fragmentTransaction.detach(fragment);
-                }
-                fragmentTransaction.commit();
+            if(BuildConfig.DEBUG) Log.d("Fragment", position + ", " + frameLayoutIds.get(position) + ", " + steppersItem.getFragment().toString());
+
+            if (fragmentTransaction == null) {
+                fragmentTransaction = fragmentManager.beginTransaction();
             }
 
-            fragmentManager.beginTransaction()
-                    .replace(frameLayoutIds.get(position), steppersItem.getFragment()).commit();
+            String name = makeFragmentName(position);
+            Fragment fragment = fragmentManager.findFragmentByTag(name);
+
+            if (fragment != null) {
+                if(BuildConfig.DEBUG) Log.v(TAG, "Attaching item #" + position + ": f=" + fragment);
+                fragmentTransaction.attach(fragment);
+            } else {
+                fragment = steppersItem.getFragment();
+                if(BuildConfig.DEBUG) Log.v(TAG, "Adding item #" + position + ": f=" + fragment);
+                fragmentTransaction.add(frameLayout.getId(), fragment,
+                        makeFragmentName(position));
+            }
+
+            if (fragmentTransaction != null) {
+                fragmentTransaction.commitAllowingStateLoss();
+                fragmentTransaction = null;
+                //fragmentManager.executePendingTransactions();
+            }
         }
 
         if(beforeStep == position) {
             AnimationUtils.hide(holder.linearLayoutContent);
         }
-        if(currentStep == position && position != 0) {
+        if(currentStep == position) {
             AnimationUtils.show(holder.linearLayoutContent);
+        }
+
+        if(fragmentManager.getFragments() != null) {
+            List<Fragment> fragments = fragmentManager.getFragments();
+            for(Fragment fragment : fragments) {
+                Log.d("Fragments", fragment.toString());
+            }
         }
     }
 
     private void nextStep() {
         this.beforeStep = currentStep;
         this.currentStep = this.currentStep + 1;
-        //notifyDataSetChanged();
-        notifyItemChanged(beforeStep);
-        notifyItemChanged(currentStep);
+        notifyItemRangeChanged(beforeStep, currentStep);
     }
 
     protected void setPossitiveButtonEnable(boolean enable){
@@ -177,5 +198,9 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
     public int findUnusedId(View view) {
         while( view.getRootView().findViewById(++fID) != null );
         return fID;
+    }
+
+    private static String makeFragmentName(long id) {
+        return "android:steppers:" + id;
     }
 }

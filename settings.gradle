@@ -1,1 +1,1 @@
-include ':steppers'
+include ':steppers', ':steppers-sample'

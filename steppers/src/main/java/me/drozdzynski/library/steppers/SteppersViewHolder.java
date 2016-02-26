@@ -16,6 +16,7 @@
 
 package me.drozdzynski.library.steppers;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +26,6 @@ import android.widget.TextView;
 
 public class SteppersViewHolder extends RecyclerView.ViewHolder {
 
-    private boolean isExpanded;
     private boolean isChecked;
 
     protected View itemView;
@@ -37,6 +37,7 @@ public class SteppersViewHolder extends RecyclerView.ViewHolder {
     protected LinearLayout frameLayoutsContainer;
     protected Button buttonContinue;
     protected Button buttonCancel;
+    protected Fragment fragment;
 
     public SteppersViewHolder(View itemView) {
         super(itemView);
@@ -51,15 +52,12 @@ public class SteppersViewHolder extends RecyclerView.ViewHolder {
         this.buttonCancel = (Button) itemView.findViewById(R.id.buttonCancel);
     }
 
-    /**
-     * @return true if expanded, false if not
-     */
-    public boolean isExpanded() {
-        return isExpanded;
+    public void setFragment(Fragment fragment) {
+        this.fragment = fragment;
     }
 
-    public void setExpanded(boolean expanded) {
-        isExpanded = expanded;
+    public Fragment getFragment() {
+        return fragment;
     }
 
     /**
