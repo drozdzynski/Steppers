@@ -22,7 +22,10 @@ public class SteppersItem {
 
     private String label;
     private String subLabel;
+    private boolean buttonEnable = true;
     private Fragment fragment;
+
+    private boolean displayed = false;
 
     public String getLabel() {
         return label;
@@ -46,5 +49,21 @@ public class SteppersItem {
 
     public void setFragment(Fragment fragment) {
         this.fragment = fragment;
+    }
+
+    public boolean isPositiveButtonEnable() {
+        return buttonEnable;
+    }
+
+    public void setPositiveButtonEnable(boolean buttonEnable) {
+        this.buttonEnable = buttonEnable;
+    }
+
+    protected boolean isDisplayed() {
+        return displayed;
+    }
+
+    protected void setDisplayed(boolean displayed) {
+        this.displayed = displayed;
     }
 }

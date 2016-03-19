@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
             item.setLabel("Step nr " + i);
             item.setSubLabel("Fragment: " + fragment.getClass().getSimpleName());
             item.setFragment(fragment);
+            item.setPositiveButtonEnable(i < 5);
 
             steps.add(item);
             i++;

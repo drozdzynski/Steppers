@@ -57,8 +57,6 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
     private int beforeStep = -1;
     private int currentStep = 0;
 
-    private boolean possitiveButtonEnable = true;
-
     @Override
     public int getItemViewType(int position) {
         return (position == currentStep ? VIEW_EXPANDED : VIEW_COLLAPSED);
@@ -99,7 +97,7 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
 
         holder.linearLayoutContent.setVisibility(position == currentStep || position == beforeStep ? View.VISIBLE : View.GONE);
 
-        holder.buttonContinue.setEnabled(possitiveButtonEnable);
+        holder.buttonContinue.setEnabled(steppersItem.isPositiveButtonEnable());
 
         if (position == getItemCount() - 1) holder.buttonContinue.setText(context.getResources().getString(R.string.step_finish));
         else holder.buttonContinue.setText(context.getResources().getString(R.string.step_continue));
@@ -161,8 +159,9 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
         if(beforeStep == position) {
             AnimationUtils.hide(holder.linearLayoutContent);
         }
-        if(currentStep == position) {
+        if(currentStep == position && !steppersItem.isDisplayed()) {
             AnimationUtils.show(holder.linearLayoutContent);
+            steppersItem.setDisplayed(true);
         }
 
         if(fragmentManager.getFragments() != null) {
@@ -177,11 +176,6 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
         this.beforeStep = currentStep;
         this.currentStep = this.currentStep + 1;
         notifyItemRangeChanged(beforeStep, currentStep);
-    }
-
-    protected void setPossitiveButtonEnable(boolean enable){
-        possitiveButtonEnable = enable;
-        notifyDataSetChanged();
     }
 
     protected void setItems(List<SteppersItem> items) {

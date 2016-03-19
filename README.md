@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    compile 'me.drozdzynski.library.steppers:steppers:0.3-SNAPSHOT'
+    compile 'me.drozdzynski.library.steppers:steppers:0.3.1-SNAPSHOT'
 }
 ```
 
@@ -74,6 +74,7 @@ SteppersItem stepFirst = new SteppersItem();
 stepFirst.setLabel("Title of step");
 stepFirst.setSubLabel("Subtitle of step");
 stepFirst.setFragment(new SomeFragment());
+stepFirst.setPositiveButtonEnable(false);
 
 steps.add(stepFirst);
 ```
@@ -84,13 +85,6 @@ SteppersView steppersView = (SteppersView) findViewById(R.id.steppersView);
 steppersView.setConfig(steppersViewConfig);
 steppersView.setItems(steps);
 steppersView.build();
-```
-
-## Funtions
-
-#### Set continue or finish button enabled/disabled
-```
-steppersView.setPossitiveButtonEnable(false);
 ```
 
 ## License
