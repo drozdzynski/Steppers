@@ -18,7 +18,9 @@ package me.drozdzynski.library.steppers;
 
 import android.support.v4.app.Fragment;
 
-public class SteppersItem {
+import java.util.Observable;
+
+public class SteppersItem extends Observable {
 
     private String label;
     private String subLabel;
@@ -56,10 +58,14 @@ public class SteppersItem {
     }
 
     public void setPositiveButtonEnable(boolean buttonEnable) {
-        this.buttonEnable = buttonEnable;
+        synchronized (this) {
+            this.buttonEnable = buttonEnable;
+        }
+        setChanged();
+        notifyObservers();
     }
 
-    protected boolean isDisplayed() {
+    protected synchronized boolean isDisplayed() {
         return displayed;
     }
 

@@ -67,6 +67,11 @@ public class SteppersView extends LinearLayout {
         return this;
     }
 
+    /*public void setPositiveButtonEnable(int position, boolean enable) {
+        this.items.get(position).setPositiveButtonEnable(enable);
+
+    }*/
+
     public void build() {
         if(config != null) {
             setOrientation(LinearLayout.HORIZONTAL);

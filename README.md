@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    compile 'me.drozdzynski.library.steppers:steppers:0.3.1-SNAPSHOT'
+    compile 'me.drozdzynski.library.steppers:steppers:0.3.2-SNAPSHOT'
 }
 ```
 

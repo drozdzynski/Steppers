@@ -32,6 +32,8 @@ import android.widget.FrameLayout;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
 
@@ -98,6 +100,15 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
         holder.linearLayoutContent.setVisibility(position == currentStep || position == beforeStep ? View.VISIBLE : View.GONE);
 
         holder.buttonContinue.setEnabled(steppersItem.isPositiveButtonEnable());
+        steppersItem.addObserver(new Observer() {
+            @Override
+            public void update(Observable observable, Object data) {
+                if(observable != null) {
+                    SteppersItem item = (SteppersItem) observable;
+                    holder.buttonContinue.setEnabled(item.isPositiveButtonEnable());
+                }
+            }
+        });
 
         if (position == getItemCount() - 1) holder.buttonContinue.setText(context.getResources().getString(R.string.step_finish));
         else holder.buttonContinue.setText(context.getResources().getString(R.string.step_continue));

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,36 +51,30 @@ public class MainActivity extends AppCompatActivity {
 
         int i = 0;
         while (i <= 10) {
-            Fragment fragment = (i % 2 == 0 ? new BlankFragment() : new BlankSecondFragment());
 
-            SteppersItem item = new SteppersItem();
+            final SteppersItem item = new SteppersItem();
             item.setLabel("Step nr " + i);
-            item.setSubLabel("Fragment: " + fragment.getClass().getSimpleName());
-            item.setFragment(fragment);
-            item.setPositiveButtonEnable(i < 5);
+            item.setPositiveButtonEnable(i % 2 != 0);
+
+            if(i % 2 == 0) {
+                BlankFragment blankFragment = new BlankFragment();
+                blankFragment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        item.setPositiveButtonEnable(true);
+                    }
+                });
+                item.setSubLabel("Fragment: " + blankFragment.getClass().getSimpleName());
+                item.setFragment(blankFragment);
+            } else {
+                BlankSecondFragment blankSecondFragment = new BlankSecondFragment();
+                item.setSubLabel("Fragment: " + blankSecondFragment.getClass().getSimpleName());
+                item.setFragment(blankSecondFragment);
+            }
 
             steps.add(item);
             i++;
         }
-
-        /*SteppersItem stepFirst = new SteppersItem();
-        stepFirst.setLabel("Title of step");
-        stepFirst.setSubLabel("Subtitle of step");
-        stepFirst.setFragment(new BlankFragment());
-
-        SteppersItem stepSecond = new SteppersItem();
-        stepSecond.setLabel("Title of second step");
-        stepSecond.setSubLabel("Subtitle of second step");
-        stepSecond.setFragment(new BlankSecondFragment());
-
-        SteppersItem stepLast = new SteppersItem();
-        stepLast.setLabel("Title of last step");
-        stepLast.setSubLabel("Subtitle of last step");
-        stepLast.setFragment(new BlankFragment());
-
-        steps.add(stepFirst);
-        steps.add(stepSecond);
-        steps.add(stepLast);*/
 
         SteppersView steppersView = (SteppersView) findViewById(R.id.steppersView);
         steppersView.setConfig(steppersViewConfig);
