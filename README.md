@@ -1,8 +1,13 @@
 ![alt tag](https://api.travis-ci.org/drozdzynski/Steppers.svg)
 <a href="http://slack.drozdzynski.me" rel="some text">![alt text][slackin]</a>
+<a href="https://android-arsenal.com/details/1/3301" rel="Android Arsenal">![alt text][androidarsenal]</a>
 [slackin]: http://slack.drozdzynski.me/badge.svg "Slack Drożdżyński"
+[androidarsenal]: https://img.shields.io/badge/Android%20Arsenal-Steppers-green.svg?style=true "Android Arsenal"
 
 # Steppers
+
+##Screen
+![alt tag](https://drozdzynski.me/repo/steppers/screen.gif)
 
 ##Setup
 
