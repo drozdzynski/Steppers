@@ -17,7 +17,6 @@
 package me.drozdzynski.library.steppers;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -27,7 +26,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +36,7 @@ import java.util.Observer;
 public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
 
     private static final String TAG = "SteppersAdapter";
+    private SteppersView steppersView;
     private Context context;
     private SteppersView.Config config;
     private List<SteppersItem> items;
@@ -49,15 +48,17 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
     private int VIEW_COLLAPSED = 0;
     private int VIEW_EXPANDED = 1;
 
-    protected SteppersAdapter(Context context, SteppersView.Config config, List<SteppersItem> items) {
-        this.context = context;
+    private int removeStep = -1;
+    private int beforeStep = -1;
+    private int currentStep = 0;
+
+    public SteppersAdapter(SteppersView steppersView, SteppersView.Config config, List<SteppersItem> items) {
+        this.steppersView = steppersView;
+        this.context = steppersView.getContext();
         this.config = config;
         this.items = items;
         this.fragmentManager = config.getFragmentManager();
     }
-
-    private int beforeStep = -1;
-    private int currentStep = 0;
 
     @Override
     public int getItemViewType(int position) {
@@ -129,41 +130,60 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
                 }
             });
 
+
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.frame_layout, holder.frameLayout, true);
+        //FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.frame_layout, holder.frameLayout, true);
 
         if(frameLayoutIds.get(position) == null) frameLayoutIds.put(position, findUnusedId(holder.itemView));
 
-        frameLayout.setId(frameLayoutIds.get(position));
+        //frameLayout.setId(frameLayoutIds.get(position));
 
-        if(config.getFragmentManager() != null && steppersItem.getFragment() != null &&
-                ( position == beforeStep || position == currentStep )
-                ) {
+        if(config.getFragmentManager() != null && steppersItem.getFragment() != null) {
             holder.frameLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
-
-            if(BuildConfig.DEBUG) Log.d("Fragment", position + ", " + frameLayoutIds.get(position) + ", " + steppersItem.getFragment().toString());
+            holder.frameLayout.setTag(frameLayoutName());
 
             if (fragmentTransaction == null) {
                 fragmentTransaction = fragmentManager.beginTransaction();
             }
 
-            String name = makeFragmentName(position);
+            String name = makeFragmentName(steppersView.getId(), position);
             Fragment fragment = fragmentManager.findFragmentByTag(name);
 
-            if (fragment != null) {
-                if(BuildConfig.DEBUG) Log.v(TAG, "Attaching item #" + position + ": f=" + fragment);
-                fragmentTransaction.attach(fragment);
-            } else {
-                fragment = steppersItem.getFragment();
-                if(BuildConfig.DEBUG) Log.v(TAG, "Adding item #" + position + ": f=" + fragment);
-                fragmentTransaction.add(frameLayout.getId(), fragment,
-                        makeFragmentName(position));
+            if(position < beforeStep) {
+                if (fragment != null) {
+                    if(BuildConfig.DEBUG) Log.v(TAG, "Removing item #" + position + ": f=" + fragment);
+                    fragmentTransaction.detach(fragment);
+                }
+            } else if(position == beforeStep || position == currentStep) {
+                if (fragment != null) {
+                    if(BuildConfig.DEBUG) Log.v(TAG, "Attaching item #" + position + ": f=" + fragment + " d=" + fragment.isDetached());
+                    fragmentTransaction.attach(fragment);
+                } else {
+                    fragment = steppersItem.getFragment();
+                    if(BuildConfig.DEBUG) Log.v(TAG, "Adding item #" + position + ": f=" + fragment + " n=" + name);
+                    fragmentTransaction.add(steppersView.getId(), fragment,
+                            name);
+
+                }
             }
 
             if (fragmentTransaction != null) {
                 fragmentTransaction.commitAllowingStateLoss();
                 fragmentTransaction = null;
-                //fragmentManager.executePendingTransactions();
+                fragmentManager.executePendingTransactions();
+            }
+
+            if(fragmentManager.findFragmentByTag(name) != null &&
+                    fragmentManager.findFragmentByTag(name).getView() != null) {
+
+                View fragmentView = fragmentManager.findFragmentByTag(name).getView();
+
+                if(fragmentView.getParent() != null && frameLayoutName() != ((View) fragmentView.getParent()).getTag()) {
+                    steppersView.removeViewInLayout(fragmentView);
+
+                    holder.frameLayout.removeAllViews();
+                    holder.frameLayout.addView(fragmentView);
+                }
             }
         }
 
@@ -171,22 +191,15 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
             AnimationUtils.hide(holder.linearLayoutContent);
         }
         if(currentStep == position && !steppersItem.isDisplayed()) {
-            AnimationUtils.show(holder.linearLayoutContent);
             steppersItem.setDisplayed(true);
-        }
-
-        if(fragmentManager.getFragments() != null) {
-            List<Fragment> fragments = fragmentManager.getFragments();
-            for(Fragment fragment : fragments) {
-                Log.d("Fragments", fragment.toString());
-            }
         }
     }
 
     private void nextStep() {
+        this.removeStep = currentStep - 1 > -1 ? currentStep - 1 : currentStep;
         this.beforeStep = currentStep;
         this.currentStep = this.currentStep + 1;
-        notifyItemRangeChanged(beforeStep, currentStep);
+        notifyItemRangeChanged(removeStep, currentStep);
     }
 
     protected void setItems(List<SteppersItem> items) {
@@ -198,14 +211,18 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
         return items.size();
     }
 
-    int fID = 190980;
+    private int fID = 87352142;
 
     public int findUnusedId(View view) {
-        while( view.getRootView().findViewById(++fID) != null );
+        while( view.findViewById(++fID) != null );
         return fID;
     }
 
-    private static String makeFragmentName(long id) {
-        return "android:steppers:" + id;
+    private static String frameLayoutName() {
+        return "android:steppers:framelayout";
+    }
+
+    private static String makeFragmentName(int viewId, long id) {
+        return "android:steppers:" + viewId + ":" + id;
     }
 }

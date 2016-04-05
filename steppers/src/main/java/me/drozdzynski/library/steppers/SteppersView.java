@@ -89,7 +89,7 @@ public class SteppersView extends LinearLayout {
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-            steppersAdapter = new SteppersAdapter(getContext(), config, items);
+            steppersAdapter = new SteppersAdapter(this, config, items);
             //steppersAdapter.setPossitiveButtonEnable(possitiveButtonEnable);
 
             recyclerView.setAdapter(steppersAdapter);
