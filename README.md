@@ -14,7 +14,7 @@
 ###1. Add library to project
 
 #### Grab via Gradle:
-```
+```groovy
 repositories {
     mavenCentral()
     maven {
@@ -42,7 +42,7 @@ dependencies {
 * Done
 
 ###2. Add view in XML Layout
-```
+```xml
 <me.drozdzynski.library.steppers.SteppersView
     android:id="@+id/steppersView"
     android:layout_width="match_parent"
@@ -50,7 +50,7 @@ dependencies {
 ```
 
 ###3. Setup config for SteppersView
-```
+```java
 SteppersView.Config steppersViewConfig = new SteppersView.Config();
 steppersViewConfig.setOnFinishAction(new OnFinishAction() {
     @Override
@@ -71,7 +71,7 @@ steppersViewConfig.setFragmentManager(getSupportFragmentManager());
 ```
 
 ###4. Create steps list
-```
+```java
 ArrayList<SteppersItem> steps = new ArrayList<>();
 
 SteppersItem stepFirst = new SteppersItem();
@@ -85,7 +85,7 @@ steps.add(stepFirst);
 ```
 
 ###5. Set config, list and build view;
-```
+```java
 SteppersView steppersView = (SteppersView) findViewById(R.id.steppersView);
 steppersView.setConfig(steppersViewConfig);
 steppersView.setItems(steps);
