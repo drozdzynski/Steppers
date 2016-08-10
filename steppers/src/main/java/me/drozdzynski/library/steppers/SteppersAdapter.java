@@ -17,6 +17,7 @@
 package me.drozdzynski.library.steppers;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -42,6 +43,7 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
     private List<SteppersItem> items;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
+    private boolean allStepsDone = false;
 
     private Map<Integer, Integer> frameLayoutIds = new HashMap<>();
 
@@ -62,21 +64,33 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        return (position == currentStep ? VIEW_EXPANDED : VIEW_COLLAPSED);
+        return ((position == currentStep && allStepsDone == false) ? VIEW_EXPANDED : VIEW_COLLAPSED);
     }
 
     @Override
     public SteppersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = null;
         if (viewType == VIEW_COLLAPSED) {
-            v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.steppers_item, parent, false);
+            if (config.isButtonsEnabled()) {
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.steppers_item, parent, false);
+            }
+            else {
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.steppers_item_without_buttons, parent, false);
+            }
         } else {
-            v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.steppers_item_expanded, parent, false);
+            if (config.isButtonsEnabled()) {
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.steppers_item_expanded, parent, false);
+            }
+            else {
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.steppers_item_expanded_without_buttons, parent, false);
+            }
         }
 
-        SteppersViewHolder vh = new SteppersViewHolder(v);
+        SteppersViewHolder vh = new SteppersViewHolder(v, config.isButtonsEnabled());
         return vh;
     }
 
@@ -92,44 +106,55 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
             holder.roundedView.setText(position + 1 + "");
         }
 
-        if(position == currentStep || holder.isChecked()) holder.roundedView.setCircleAccentColor();
-        else holder.roundedView.setCircleGrayColor();
+        if (config.isUseCustomColors()) {
+            if (position == currentStep || holder.isChecked())
+                holder.roundedView.setCircleColor(config.getStepCheckedColor());
+            else holder.roundedView.setCircleColor(config.getStepUncheckedColor());
+        }
+        else {
+            if (position == currentStep || holder.isChecked())
+                holder.roundedView.setCircleAccentColor();
+            else holder.roundedView.setCircleGrayColor();
+        }
 
         holder.textViewLabel.setText(steppersItem.getLabel());
         holder.textViewSubLabel.setText(steppersItem.getSubLabel());
 
         holder.linearLayoutContent.setVisibility(position == currentStep || position == beforeStep ? View.VISIBLE : View.GONE);
-
-        holder.buttonContinue.setEnabled(steppersItem.isPositiveButtonEnable());
-        steppersItem.addObserver(new Observer() {
-            @Override
-            public void update(Observable observable, Object data) {
-                if(observable != null) {
-                    SteppersItem item = (SteppersItem) observable;
-                    holder.buttonContinue.setEnabled(item.isPositiveButtonEnable());
-                }
-            }
-        });
-
-        if (position == getItemCount() - 1) holder.buttonContinue.setText(context.getResources().getString(R.string.step_finish));
-        else holder.buttonContinue.setText(context.getResources().getString(R.string.step_continue));
-
-        holder.buttonContinue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(position == getItemCount() - 1) config.getOnFinishAction().onFinish();
-                else nextStep();
-            }
-        });
-
-        if(config.getOnCancelAction() != null)
-            holder.buttonCancel.setOnClickListener(new View.OnClickListener() {
+        if (config.isButtonsEnabled()) {
+            holder.buttonContinue.setEnabled(steppersItem.isPositiveButtonEnable());
+            steppersItem.addObserver(new Observer() {
                 @Override
-                public void onClick(View v) {
-                    config.getOnCancelAction().onCancel();
+                public void update(Observable observable, Object data) {
+                    if (observable != null) {
+                        SteppersItem item = (SteppersItem) observable;
+                        holder.buttonContinue.setEnabled(item.isPositiveButtonEnable());
+                    }
                 }
             });
 
+            if (position == getItemCount() - 1)
+                holder.buttonContinue.setText(context.getResources().getString(R.string.step_finish));
+            else
+                holder.buttonContinue.setText(context.getResources().getString(R.string.step_continue));
+
+            holder.buttonContinue.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (position == getItemCount() - 1) config.getOnFinishAction().onFinish();
+                    else nextStep();
+                }
+            });
+
+            if (config.getOnCancelAction() != null)
+                holder.buttonCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        config.getOnCancelAction().onCancel();
+                    }
+                });
+
+        }
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.frame_layout, holder.frameLayout, true);
@@ -224,5 +249,16 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
 
     private static String makeFragmentName(int viewId, long id) {
         return "android:steppers:" + viewId + ":" + id;
+    }
+
+    public void OnStepDone(int position) {
+        if(position == getItemCount() - 1) {
+            allStepsDone = true;
+            nextStep();
+            config.getOnFinishAction().onFinish();
+        }
+        else {
+            nextStep();
+        }
     }
 }

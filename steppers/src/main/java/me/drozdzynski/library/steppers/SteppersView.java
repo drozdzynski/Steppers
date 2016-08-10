@@ -23,10 +23,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import java.util.List;
@@ -106,6 +104,42 @@ public class SteppersView extends LinearLayout {
         private OnFinishAction onFinishAction;
         private OnCancelAction onCancelAction;
         private FragmentManager fragmentManager;
+        private boolean isButtonsEnabled = true;
+        private boolean useCustomColors = false;
+        private int stepCheckedColor;
+        private int stepUncheckedColor;
+
+        public boolean isUseCustomColors() {
+            return useCustomColors;
+        }
+
+        public void setUseCustomColors(boolean useCustomColors) {
+            this.useCustomColors = useCustomColors;
+        }
+
+        public int getStepUncheckedColor() {
+            return stepUncheckedColor;
+        }
+
+        public void setStepUncheckedColor(int stepUncheckedColor) {
+            this.stepUncheckedColor = stepUncheckedColor;
+        }
+
+        public int getStepCheckedColor() {
+            return stepCheckedColor;
+        }
+
+        public void setStepCheckedColor(int stepCheckedColor) {
+            this.stepCheckedColor = stepCheckedColor;
+        }
+
+        public boolean isButtonsEnabled() {
+            return isButtonsEnabled;
+        }
+
+        public void setIsButtonsEnabled(boolean isButtonsEnabled) {
+            this.isButtonsEnabled = isButtonsEnabled;
+        }
 
         public Config() {
 
@@ -142,6 +176,10 @@ public class SteppersView extends LinearLayout {
     protected static int findUnusedId(View view) {
         while( view.getRootView().findViewById(++fID) != null );
         return fID;
+    }
+
+    public void OnStepDone(int position) {
+        steppersAdapter.OnStepDone(position);
     }
 
 }
