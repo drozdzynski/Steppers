@@ -1,6 +1,7 @@
 package me.drozdzynski.library.sample.steppers;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -47,36 +48,34 @@ public class MainActivity extends AppCompatActivity {
         });
 
         steppersViewConfig.setFragmentManager(getSupportFragmentManager());
+        steppersViewConfig.setUseCustomColors(true);
+        steppersViewConfig.setStepCheckedColor(Color.parseColor("#0DB151"));
+        steppersViewConfig.setStepUncheckedColor(Color.DKGRAY);
+        steppersViewConfig.setIsButtonsEnabled(false);
         ArrayList<SteppersItem> steps = new ArrayList<>();
+        final SteppersView steppersView = (SteppersView) findViewById(R.id.steppersView);
 
         int i = 0;
-        while (i <= 10) {
+        while (i <= 5) {
 
             final SteppersItem item = new SteppersItem();
             item.setLabel("Step nr " + i);
-            item.setPositiveButtonEnable(i % 2 != 0);
 
-            if(i % 2 == 0) {
-                BlankFragment blankFragment = new BlankFragment();
-                blankFragment.setOnClickListener(new View.OnClickListener() {
+            final BlankFragment blankFragment = new BlankFragment();
+            blankFragment.setPosition(i);
+            blankFragment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        item.setPositiveButtonEnable(true);
-                    }
+                        steppersView.OnStepDone(blankFragment.getPosition());
+                   }
                 });
-                item.setSubLabel("Fragment: " + blankFragment.getClass().getSimpleName());
-                item.setFragment(blankFragment);
-            } else {
-                BlankSecondFragment blankSecondFragment = new BlankSecondFragment();
-                item.setSubLabel("Fragment: " + blankSecondFragment.getClass().getSimpleName());
-                item.setFragment(blankSecondFragment);
-            }
+            item.setSubLabel("Fragment: " + blankFragment.getClass().getSimpleName());
+            item.setFragment(blankFragment);
 
             steps.add(item);
             i++;
         }
 
-        SteppersView steppersView = (SteppersView) findViewById(R.id.steppersView);
         steppersView.setConfig(steppersViewConfig);
         steppersView.setItems(steps);
         steppersView.build();
