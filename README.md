@@ -1,10 +1,10 @@
 ![alt tag](https://api.travis-ci.org/drozdzynski/Steppers.svg)
 <a href="https://twitter.com/drozdzynskime" rel="some text">![alt text][twitter]</a>
 <a href="https://android-arsenal.com/details/1/3301" rel="Android Arsenal">![alt text][androidarsenal]</a>
-<a href="https://supporterhq.com/support/dqfwyaghpju5ijbt3pzyl5uv6/steppers" rel="SupporterHQ">![alt text][supporterhq]</a>
+<a href="https://www.patreon.com/drozdzynski" rel="Patreon">![alt text][patreon]</a>
 [twitter]: https://img.shields.io/twitter/follow/drozdzynskime.svg?style=social&label=Follow "Twitter @drozdzynskime"
 [androidarsenal]: https://img.shields.io/badge/Android%20Arsenal-Steppers-green.svg?style=true "Android Arsenal"
-[supporterhq]: https://supporterhq.com/api/b/dqfwyaghpju5ijbt3pzyl5uv6/steppers "SupporterHQ"
+[patreon]: https://img.shields.io/badge/donate-patreon-%23E6461A.svg "Patreon"
 
 # Steppers
 
