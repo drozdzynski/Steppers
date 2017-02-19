@@ -12,10 +12,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import me.drozdzynski.library.steppers.OnCancelAction;
+import me.drozdzynski.library.steppers.OnChangeStepAction;
 import me.drozdzynski.library.steppers.OnFinishAction;
 import me.drozdzynski.library.steppers.SteppersItem;
 import me.drozdzynski.library.steppers.SteppersView;
@@ -43,6 +45,14 @@ public class MainActivity extends AppCompatActivity {
             public void onCancel() {
                 MainActivity.this.startActivity(new Intent(MainActivity.this, MainActivity.class));
                 MainActivity.this.finish();
+            }
+        });
+
+        steppersViewConfig.setOnChangeStepAction(new OnChangeStepAction() {
+            @Override
+            public void onChangeStep(int position, SteppersItem activeStep) {
+                Toast.makeText(MainActivity.this, "Step changed to: " + activeStep.getLabel() + " (" + position + ")",
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
