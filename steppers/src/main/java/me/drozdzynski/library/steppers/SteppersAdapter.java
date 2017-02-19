@@ -81,7 +81,8 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(final SteppersViewHolder holder, final int position) {
+    public void onBindViewHolder(final SteppersViewHolder holder, int p) {
+        final int position = holder.getAdapterPosition();
         final SteppersItem steppersItem = items.get(position);
 
         holder.setChecked(position < currentStep);
