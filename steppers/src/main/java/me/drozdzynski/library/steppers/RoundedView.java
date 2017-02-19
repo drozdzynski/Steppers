@@ -154,11 +154,13 @@ public class RoundedView extends View {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_check);
 
-        float posX = (canvas.getWidth()  - bitmap.getWidth()) / 2;
+        if (bitmap != null) {
+            float posX = (canvas.getWidth() - bitmap.getWidth()) / 2;
 
-        float posY = (canvas.getHeight() - bitmap.getHeight()) / 2;
+            float posY = (canvas.getHeight() - bitmap.getHeight()) / 2;
 
-        canvas.drawBitmap(bitmap, posX, posY, paint);
+            canvas.drawBitmap(bitmap, posX, posY, paint);
+        }
     }
 
 }
