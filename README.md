@@ -1,10 +1,12 @@
 ![alt tag](https://api.travis-ci.org/drozdzynski/Steppers.svg)
-<a href="https://twitter.com/drozdzynskime" rel="some text">![alt text][twitter]</a>
 <a href="https://android-arsenal.com/details/1/3301" rel="Android Arsenal">![alt text][androidarsenal]</a>
 <a href="https://www.patreon.com/drozdzynski" rel="Patreon">![alt text][patreon]</a>
+<a href="https://gitter.im/drozdzynski/Steppers" rel="Gitter">![alt text][gitter]</a>
+<a href="https://twitter.com/drozdzynskime" rel="some text">![alt text][twitter]</a>
 [twitter]: https://img.shields.io/twitter/follow/drozdzynskime.svg?style=social&label=Follow "Twitter @drozdzynskime"
 [androidarsenal]: https://img.shields.io/badge/Android%20Arsenal-Steppers-green.svg?style=true "Android Arsenal"
 [patreon]: https://img.shields.io/badge/donate-patreon-%23E6461A.svg "Patreon"
+[gitter]: https://img.shields.io/gitter/room/nwjs/nw.js.svg "Gitter"
 
 # Steppers
 
@@ -68,6 +70,13 @@ steppersViewConfig.setOnCancelAction(new OnCancelAction() {
     }
 });
 
+steppersViewConfig.setOnChangeStepAction(new OnChangeStepAction() {
+    @Override
+    public void onChangeStep(int position, SteppersItem activeStep) {
+        // Action when click continue on each step
+    }
+});
+
 // Setup Support Fragment Manager for fragments in steps
 steppersViewConfig.setFragmentManager(getSupportFragmentManager());
 ```
@@ -96,7 +105,7 @@ steppersView.build();
 
 ## License
 ```
-Copyright (C) 2015 Krystian Drożdżyński
+Copyright (C) 2015-2017 Krystian Drożdżyński
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
