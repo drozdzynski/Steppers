@@ -1,21 +1,17 @@
-![alt tag](https://api.travis-ci.org/drozdzynski/Steppers.svg)
-<a href="https://android-arsenal.com/details/1/3301" rel="Android Arsenal">![alt text][androidarsenal]</a>
-<a href="https://www.patreon.com/drozdzynski" rel="Patreon">![alt text][patreon]</a>
-<a href="https://gitter.im/drozdzynski/Steppers" rel="Gitter">![alt text][gitter]</a>
-<a href="https://twitter.com/drozdzynskime" rel="some text">![alt text][twitter]</a>
-[twitter]: https://img.shields.io/twitter/follow/drozdzynskime.svg?style=social&label=Follow "Twitter @drozdzynskime"
-[androidarsenal]: https://img.shields.io/badge/Android%20Arsenal-Steppers-green.svg?style=true "Android Arsenal"
-[patreon]: https://img.shields.io/badge/donate-patreon-%23E6461A.svg "Patreon"
-[gitter]: https://img.shields.io/gitter/room/nwjs/nw.js.svg "Gitter"
+<img src="https://api.travis-ci.org/drozdzynski/Steppers.svg" /> <a href="https://android-arsenal.com/details/1/3301"><img src="https://img.shields.io/badge/Android%20Arsenal-Steppers-green.svg?style=true"></a>
+<a href="https://www.patreon.com/drozdzynski" rel="Patreon"><img src="https://img.shields.io/badge/donate-patreon-%23E6461A.svg" /></a>
+<a href="https://gitter.im/drozdzynski/Steppers" rel="Gitter"><img src="https://img.shields.io/gitter/room/nwjs/nw.js.svg" /></a>
+<a href="https://twitter.com/drozdzynskime" rel="some text"><img src="https://img.shields.io/twitter/follow/drozdzynskime.svg?style=social&label=Follow" /></a>
 
 # Steppers
 
-##Screen
-![alt tag](https://drozdzynski.me/repo/steppers/screen.gif)
+## Screen
 
-##Setup
+<img src="https://drozdzynski.me/repo/steppers/screen.gif" />
 
-###1. Add library to project
+## Setup
+
+### 1. Add library to project
 
 #### Grab via Gradle:
 ```groovy
@@ -45,7 +41,7 @@ dependencies {
     * Select ":library"
 * Done
 
-###2. Add view in XML Layout
+### 2. Add view in XML Layout
 ```xml
 <me.drozdzynski.library.steppers.SteppersView
     android:id="@+id/steppersView"
@@ -53,7 +49,7 @@ dependencies {
     android:layout_height="match_parent"/>
 ```
 
-###3. Setup config for SteppersView
+### 3. Setup config for SteppersView
 ```java
 SteppersView.Config steppersViewConfig = new SteppersView.Config();
 steppersViewConfig.setOnFinishAction(new OnFinishAction() {
@@ -81,7 +77,7 @@ steppersViewConfig.setOnChangeStepAction(new OnChangeStepAction() {
 steppersViewConfig.setFragmentManager(getSupportFragmentManager());
 ```
 
-###4. Create steps list
+### 4. Create steps list
 ```java
 ArrayList<SteppersItem> steps = new ArrayList<>();
 
@@ -95,7 +91,7 @@ stepFirst.setPositiveButtonEnable(false);
 steps.add(stepFirst);
 ```
 
-###5. Set config, list and build view;
+### 5. Set config, list and build view;
 ```java
 SteppersView steppersView = (SteppersView) findViewById(R.id.steppersView);
 steppersView.setConfig(steppersViewConfig);
