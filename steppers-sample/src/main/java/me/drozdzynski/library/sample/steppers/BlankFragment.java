@@ -15,6 +15,7 @@ import android.widget.Button;
 public class BlankFragment extends Fragment {
 
     private Button.OnClickListener onClickListener;
+    private int position;
 
     public BlankFragment() {
         // Required empty public constructor
@@ -34,5 +35,13 @@ public class BlankFragment extends Fragment {
 
     public void setOnClickListener(Button.OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getPosition() {
+        return position;
     }
 }
