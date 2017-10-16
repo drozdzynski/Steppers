@@ -25,6 +25,7 @@ public class SteppersItem extends Observable {
     private String label;
     private String subLabel;
     private boolean buttonEnable = true;
+    private boolean skippable = false;
     private Fragment fragment;
 
     private boolean displayed = false;
@@ -71,5 +72,13 @@ public class SteppersItem extends Observable {
 
     protected void setDisplayed(boolean displayed) {
         this.displayed = displayed;
+    }
+
+    public boolean isSkippable() {
+        return skippable;
+    }
+
+    public void setSkippable(boolean skippable) {
+        this.skippable = skippable;
     }
 }
