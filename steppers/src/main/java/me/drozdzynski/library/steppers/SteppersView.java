@@ -67,6 +67,10 @@ public class SteppersView extends LinearLayout {
         return this;
     }
 
+    public void setActiveItem (int position) {
+        steppersAdapter.changeToStep(position);
+    }
+
     /*public void setPositiveButtonEnable(int position, boolean enable) {
         this.items.get(position).setPositiveButtonEnable(enable);
 
@@ -105,6 +109,7 @@ public class SteppersView extends LinearLayout {
 
         private OnFinishAction onFinishAction;
         private OnCancelAction onCancelAction;
+        private OnSkipAction onSkipAction;
         private OnChangeStepAction onChangeStepAction;
         private FragmentManager fragmentManager;
 
@@ -132,6 +137,12 @@ public class SteppersView extends LinearLayout {
 
         public void setOnChangeStepAction(OnChangeStepAction onChangeStepAction) {
             this.onChangeStepAction = onChangeStepAction;
+        }
+
+        public OnSkipAction getOnSkipAction () { return onSkipAction; }
+
+        public void setOnSkipAction (OnSkipAction onSkipAction) {
+            this.onSkipAction = onSkipAction;
         }
 
         public OnChangeStepAction getOnChangeStepAction() {

@@ -3,4 +3,5 @@
     <string name="step_continue">Continue</string>
     <string name="step_finish">Finish</string>
     <string name="step_cancel">Cancel</string>
+    <string name="step_skip">Skip</string>
 </resources>

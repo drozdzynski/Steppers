@@ -123,14 +123,25 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
             }
         });
 
-        if(config.getOnCancelAction() != null)
-            holder.buttonCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    config.getOnCancelAction().onCancel();
-                }
-            });
-
+        if (steppersItem.isSkippable() && position < getItemCount() -1) {
+            holder.buttonCancel.setText(context.getResources().getString(R.string.step_skip));
+            if (config.getOnSkipAction() != null) {
+                holder.buttonCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        config.getOnSkipAction().onSkip(position);
+                    }
+                });
+            }
+        } else {
+            if (config.getOnCancelAction() != null)
+                holder.buttonCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        config.getOnCancelAction().onCancel();
+                    }
+                });
+        }
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.frame_layout, holder.frameLayout, true);
@@ -197,14 +208,26 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
     }
 
     private void nextStep() {
-        this.removeStep = currentStep - 1 > -1 ? currentStep - 1 : currentStep;
-        this.beforeStep = currentStep;
-        this.currentStep = this.currentStep + 1;
-        notifyItemRangeChanged(removeStep, currentStep);
+        Boolean proceed = true;
 
         if(config.getOnChangeStepAction() != null) {
             SteppersItem steppersItem = items.get(this.currentStep);
-            config.getOnChangeStepAction().onChangeStep(this.currentStep, steppersItem);
+            proceed = config.getOnChangeStepAction().onChangeStep(this.currentStep, steppersItem);
+        }
+
+        if (proceed) {
+            changeToStep(currentStep + 1);
+        }
+    }
+
+    protected void changeToStep (int position) {
+        if (position > currentStep) {
+            this.removeStep = currentStep - 1 > -1 ? currentStep - 1 : currentStep;
+            this.beforeStep = currentStep;
+            this.currentStep = position;
+            notifyItemRangeChanged(removeStep, currentStep);
+        } else {
+            Log.e(TAG, "You can advance through steps, not go back");
         }
     }
 
