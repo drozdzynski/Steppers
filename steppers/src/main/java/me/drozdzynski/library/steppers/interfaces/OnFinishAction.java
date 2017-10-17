@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package me.drozdzynski.library.steppers;
+package me.drozdzynski.library.steppers.interfaces;
 
-public interface OnCancelAction {
+public interface OnFinishAction {
 
-    public void onCancel();
+    public void onFinish();
 
 }

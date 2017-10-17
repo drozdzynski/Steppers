@@ -20,13 +20,18 @@ import android.support.v4.app.Fragment;
 
 import java.util.Observable;
 
+import me.drozdzynski.library.steppers.interfaces.OnClickContinue;
+import me.drozdzynski.library.steppers.interfaces.OnSkipStepAction;
+
 public class SteppersItem extends Observable {
 
     private String label;
     private String subLabel;
     private boolean buttonEnable = true;
-    private boolean skippable = false;
     private Fragment fragment;
+    private OnClickContinue onClickContinue;
+    private boolean skippable = false;
+    private OnSkipStepAction onSkipStepAction;
 
     private boolean displayed = false;
 
@@ -66,19 +71,36 @@ public class SteppersItem extends Observable {
         notifyObservers();
     }
 
-    protected synchronized boolean isDisplayed() {
-        return displayed;
+    public OnClickContinue getOnClickContinue() {
+        return onClickContinue;
     }
 
-    protected void setDisplayed(boolean displayed) {
-        this.displayed = displayed;
+    public void setOnClickContinue(OnClickContinue onClickContinue) {
+        this.onClickContinue = onClickContinue;
     }
 
     public boolean isSkippable() {
         return skippable;
     }
 
+    public OnSkipStepAction getOnSkipStepAction() {
+        return onSkipStepAction;
+    }
+
     public void setSkippable(boolean skippable) {
         this.skippable = skippable;
+    }
+
+    public void setSkippable(boolean skippable, OnSkipStepAction onSkipStepAction) {
+        this.skippable = skippable;
+        this.onSkipStepAction = onSkipStepAction;
+    }
+
+    protected synchronized boolean isDisplayed() {
+        return displayed;
+    }
+
+    protected void setDisplayed(boolean displayed) {
+        this.displayed = displayed;
     }
 }

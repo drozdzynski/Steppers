@@ -23,17 +23,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import java.util.List;
 
+import me.drozdzynski.library.steppers.interfaces.OnCancelAction;
+import me.drozdzynski.library.steppers.interfaces.OnChangeStepAction;
+import me.drozdzynski.library.steppers.interfaces.OnFinishAction;
+import me.drozdzynski.library.steppers.interfaces.OnSkipStepAction;
+
 public class SteppersView extends LinearLayout {
 
-    private RecyclerView recyclerView;
     private SteppersAdapter steppersAdapter;
 
     private Config config;
@@ -67,24 +69,19 @@ public class SteppersView extends LinearLayout {
         return this;
     }
 
-    public void setActiveItem (int position) {
+    public void setActiveItem(int position) {
         steppersAdapter.changeToStep(position);
     }
 
-    /*public void setPositiveButtonEnable(int position, boolean enable) {
-        this.items.get(position).setPositiveButtonEnable(enable);
-
-    }*/
+    public void nextStep() {
+        steppersAdapter.nextStep();
+    }
 
     public void build() {
         if(config != null) {
             setOrientation(LinearLayout.HORIZONTAL);
 
-            //LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            //inflater.inflate(R.layout.steppers_recycle, this, true);
-            //recyclerView = (RecyclerView) getChildAt(0);
-
-            recyclerView = new RecyclerView(getContext());
+            RecyclerView recyclerView = new RecyclerView(getContext());
             RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             recyclerView.setLayoutParams(layoutParams);
 
@@ -94,7 +91,6 @@ public class SteppersView extends LinearLayout {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
             steppersAdapter = new SteppersAdapter(this, config, items);
-            //steppersAdapter.setPossitiveButtonEnable(possitiveButtonEnable);
 
             recyclerView.setAdapter(steppersAdapter);
 
@@ -109,9 +105,9 @@ public class SteppersView extends LinearLayout {
 
         private OnFinishAction onFinishAction;
         private OnCancelAction onCancelAction;
-        private OnSkipAction onSkipAction;
         private OnChangeStepAction onChangeStepAction;
         private FragmentManager fragmentManager;
+        private boolean cancelAvailable = true;
 
         public Config() {
 
@@ -139,12 +135,6 @@ public class SteppersView extends LinearLayout {
             this.onChangeStepAction = onChangeStepAction;
         }
 
-        public OnSkipAction getOnSkipAction () { return onSkipAction; }
-
-        public void setOnSkipAction (OnSkipAction onSkipAction) {
-            this.onSkipAction = onSkipAction;
-        }
-
         public OnChangeStepAction getOnChangeStepAction() {
             return onChangeStepAction;
         }
@@ -155,6 +145,14 @@ public class SteppersView extends LinearLayout {
 
         public FragmentManager getFragmentManager() {
             return fragmentManager;
+        }
+
+        public void setCancelAvailable(boolean cancelAvailable) {
+            this.cancelAvailable = cancelAvailable;
+        }
+
+        public boolean isCancelAvailable() {
+            return cancelAvailable;
         }
     }
 

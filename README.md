@@ -15,15 +15,8 @@
 
 #### Grab via Gradle:
 ```groovy
-repositories {
-    mavenCentral()
-    maven {
-        url "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
-}
-
 dependencies {
-    compile 'me.drozdzynski.library.steppers:steppers:0.4.0-SNAPSHOT'
+    compile 'me.drozdzynski.library.steppers:steppers:1.0.0'
 }
 ```
 
@@ -97,6 +90,46 @@ SteppersView steppersView = (SteppersView) findViewById(R.id.steppersView);
 steppersView.setConfig(steppersViewConfig);
 steppersView.setItems(steps);
 steppersView.build();
+```
+
+## Other functions
+
+### Skip step
+Simple:
+```java
+item.setSkippable(true);
+```
+
+With callback:
+```java
+item.setSkippable(true, new OnSkipStepAction() {
+    @Override
+    public void onSkipStep() {
+        // Some action after step is skipped
+    }
+});
+```
+
+### Override continue button
+```java
+item.setOnClickContinue(new OnClickContinue() {
+    @Override
+    public void onClick() {
+        // Some action on click
+        
+        steppersView.nextStep(); // Now You must call next step
+    }
+});
+```
+
+### Change active step
+```java
+steppersView.setActiveItem(1); // step index from 0 
+```
+
+### Disable cancel button (hide)
+```java
+steppersViewConfig.setCancelAvailable(false);
 ```
 
 ## License
