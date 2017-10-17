@@ -94,7 +94,7 @@ steppersView.build();
 
 ## Other functions
 
-### Skip step
+### Enable skip step button
 Simple:
 ```java
 item.setSkippable(true);
