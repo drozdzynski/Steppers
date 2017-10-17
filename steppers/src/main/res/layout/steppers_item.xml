@@ -86,6 +86,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
+                    android:text="@string/step_skip"
+                    android:visibility="gone"
+                    android:id="@+id/buttonSkip" />
+
+                <Button
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
                     android:text="@string/step_cancel"
                     android:id="@+id/buttonCancel" />
 

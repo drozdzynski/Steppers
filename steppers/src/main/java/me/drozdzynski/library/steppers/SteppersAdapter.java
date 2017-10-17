@@ -34,6 +34,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
+    private static final int VIEW_COLLAPSED = 0;
+    private static final int VIEW_EXPANDED = 1;
 
     private static final String TAG = "SteppersAdapter";
     private SteppersView steppersView;
@@ -45,10 +47,6 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
 
     private Map<Integer, Integer> frameLayoutIds = new HashMap<>();
 
-    private int VIEW_COLLAPSED = 0;
-    private int VIEW_EXPANDED = 1;
-
-    private int removeStep = -1;
     private int beforeStep = -1;
     private int currentStep = 0;
 
@@ -119,18 +117,43 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
             @Override
             public void onClick(View v) {
                 if(position == getItemCount() - 1) config.getOnFinishAction().onFinish();
-                else nextStep();
+                else {
+                    if(steppersItem.getOnClickContinue() != null) {
+                        steppersItem.getOnClickContinue().onClick();
+                    } else {
+                        nextStep();
+                    }
+                }
             }
         });
 
-        if(config.getOnCancelAction() != null)
-            holder.buttonCancel.setOnClickListener(new View.OnClickListener() {
+        if (steppersItem.isSkippable() && position < getItemCount() - 1) {
+            holder.buttonSkip.setVisibility(View.VISIBLE);
+            holder.buttonSkip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    config.getOnCancelAction().onCancel();
+                    if (steppersItem.getOnSkipStepAction() != null) {
+                        steppersItem.getOnSkipStepAction().onSkipStep();
+                    }
+
+                    nextStep();
                 }
             });
+        } else {
+            holder.buttonSkip.setVisibility(View.GONE);
+        }
 
+        if(config.isCancelAvailable()) {
+            if (config.getOnCancelAction() != null)
+                holder.buttonCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        config.getOnCancelAction().onCancel();
+                    }
+                });
+        } else {
+            holder.buttonCancel.setVisibility(View.GONE);
+        }
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.frame_layout, holder.frameLayout, true);
@@ -196,15 +219,25 @@ public class SteppersAdapter extends RecyclerView.Adapter<SteppersViewHolder> {
         }
     }
 
-    private void nextStep() {
-        this.removeStep = currentStep - 1 > -1 ? currentStep - 1 : currentStep;
-        this.beforeStep = currentStep;
-        this.currentStep = this.currentStep + 1;
-        notifyItemRangeChanged(removeStep, currentStep);
+    protected void nextStep() {
+        changeToStep(currentStep + 1);
+    }
 
-        if(config.getOnChangeStepAction() != null) {
-            SteppersItem steppersItem = items.get(this.currentStep);
-            config.getOnChangeStepAction().onChangeStep(this.currentStep, steppersItem);
+    protected void changeToStep(int position) {
+        if(position != currentStep) {
+            this.beforeStep = currentStep;
+            this.currentStep = position;
+            if(beforeStep < currentStep)
+                notifyItemRangeChanged(beforeStep, currentStep);
+            else
+                notifyItemRangeChanged(currentStep, beforeStep);
+
+            if(config.getOnChangeStepAction() != null) {
+                SteppersItem steppersItem = items.get(this.currentStep);
+                config.getOnChangeStepAction().onChangeStep(this.currentStep, steppersItem);
+            }
+        } else {
+            if(BuildConfig.DEBUG) Log.i(TAG, "This step is currently active");
         }
     }
 

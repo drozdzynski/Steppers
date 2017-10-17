@@ -1,4 +1,6 @@
-package me.drozdzynski.library.steppers;
+package me.drozdzynski.library.steppers.interfaces;
+
+import me.drozdzynski.library.steppers.SteppersItem;
 
 public interface OnChangeStepAction {
 
