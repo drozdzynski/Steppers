@@ -19,9 +19,9 @@ package me.drozdzynski.library.steppers;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +32,6 @@ import java.util.List;
 import me.drozdzynski.library.steppers.interfaces.OnCancelAction;
 import me.drozdzynski.library.steppers.interfaces.OnChangeStepAction;
 import me.drozdzynski.library.steppers.interfaces.OnFinishAction;
-import me.drozdzynski.library.steppers.interfaces.OnSkipStepAction;
 
 public class SteppersView extends LinearLayout {
 
